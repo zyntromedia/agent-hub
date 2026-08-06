@@ -1,0 +1,37 @@
+Here are the top 30 advanced skills, features, and platform attributes spanning Anthropic Claude AI and Genspark AI, categorized by operational domain:
+Frontier Cognition & Reasoning Engine
+ * Adaptive Reasoning Effort Control (Claude): Allows users and developers to set granular reasoning effort levels (standard, high, xhigh, max) rather than fixed token budgets, enabling dynamic computational scaling based on query complexity.
+ * Proprietary Frontier Models (Claude): Powered by the Claude 4 and 5 model families (including Opus 4.7/4.8 and Sonnet 5), delivering high deterministic accuracy, minimal hallucination, and strict prompt adherence.
+ * Mixture-of-Agents Aggregation (Genspark): Routes sub-tasks dynamically across 80+ top-tier foundation models (such as GPT-5.4, Claude Opus 4.6, Grok 4.5, and Nemotron) to maximize output quality.
+ * Super Agent Task Decomposition (Genspark): Achieves high task autonomy (rated at 83%) by breaking down complex high-level intent into sequential sub-tasks across specialized sub-agents.
+ * Auto-Scaling Project Retrieval Context (Claude): Expands context capacity up to 1,000,000 tokens while using automated vector search mode to search massive document stores without saturating active context windows.
+Software Engineering & Code Execution
+ * Claude Code Terminal CLI (Claude): Operates natively within developer command line interfaces, executing multi-file codebase edits, git management, and automated bug fixes (authoring over 80% of internal production code at Anthropic).
+ * Claude Code Security (Claude): Automated codebase auditing tool that scans projects to identify, highlight, and patch security vulnerabilities.
+ * Live Interactive Artifacts & Inline Editing (Claude): Renders HTML, React components, SVGs, and vector graphics in a side panel with real-time, highlight-and-prompt inline modification.
+ * Zero-Token Persistent Dashboards (Claude): Artifacts in Claude Cowork save state locally and pull live API data (from tools like Stripe, Gmail, and Shopify) on launch without consuming prompt refresh tokens.
+ * OpenCode Execution Engine (Genspark): Powers Genspark Advanced Workflows, providing high-speed code execution with robust branching logic and edge-case handling.
+Multimodal Media & Visual Generation
+ * Native 4K Raster Image Synthesis (Genspark): Integrates high-resolution generative vision models—including Nano Banana 2, Seedream 5, and GPT Image 2—to produce marketing materials and high-res visuals.
+ * AI Presentation Deck Builder (Genspark): Converts raw unstructured documents, meeting notes, or prompts directly into formatted slide decks without manual template design.
+ * Claude Design Layout Generator (Claude): Natural-language visual creation tool that pulls brand systems directly from codebases or design files to generate UI prototypes, slides, and marketing collateral.
+ * AI Sheets & Data Visualization (Genspark): Generates auto-updating spreadsheets, executes natural language SQL/database queries, and renders dynamic chart dashboards from unstructured datasets.
+ * Synthetic Video Generation (Genspark): Embedded video creation tools that convert prompts or scripts directly into dynamic promotional video assets.
+Voice Processing, Telephony, & Communication
+ * "Call for Me" Autonomous Telephony Agent (Genspark): Uses low-latency conversational voice models to execute outbound phone calls for appointments, inquiries, and service bookings.
+ * Speakly Audio Suite (Genspark): Provides zero-credit voice dictation, real-time multilingual translation for live meetings, and instant document generation from audio.
+ * AI Meeting Bots & Automated Notes (Genspark): Connects to Google or Outlook calendars to automatically join scheduled video calls, transcribe dialogue, and send summaries to attendees.
+ * GenMail Inbox Intelligence (Genspark): An email management agent that learns context to summarize, draft, organize, and handle high-volume inbox communications asynchronously.
+Desktop Automation & Cloud Runtimes
+ * Genspark Claw Dedicated Cloud VMs (Genspark): Provisions isolated Azure virtual machines (2 to 4 vCPU, up to 16GB RAM) running 24/7 with dedicated IP addresses to execute long-running tasks asynchronously.
+ * Multi-Channel Chat Task Delegation (Genspark): Enables users to command cloud agents directly via external messaging channels including Slack, Microsoft Teams, and WhatsApp.
+ * Claude Cowork Local Sandboxing (Claude): Runs inside desktop environments within user-approved local folders, safely manipulating local spreadsheets, text files, and documents.
+ * Dispatch Mobile-to-Desktop Remote Routing (Claude): Allows users to send remote prompts from mobile devices to initiate and guide desktop or cloud-based execution sessions.
+ * Genspark Claw for Desktop (Genspark): Native client combining Computer Use and Browser Use tools to navigate web forms, inspect desktop screens, and organize local folders.
+ * Native Microsoft Office Plugins (Genspark): Direct sidebar integrations inside Word (drafting), Excel (data analytics), and PowerPoint (template slide editing).
+Web Research, Integration, & System Governance
+ * Sparkpages Cited Research Engine (Genspark): Synthesizes multi-engine web search queries into live, cited research pages complete with structured text, visuals, and source links.
+ * Computer Use API (Claude): Screen-reading and UI interaction framework allowing Claude to interpret visual screens, click controls, and execute multi-step GUI workflows.
+ * Model Context Protocol / MCP (Claude): Standardized architecture for connecting AI assistants safely to enterprise APIs, SQL databases, local developer systems, and software platforms.
+ * Server-Side Scheduled Cloud Workflows (Claude): Allows scheduled tasks to run on Anthropic’s servers automatically without requiring the user's personal laptop or computer to stay active.
+ * Unified AI Drive Storage & App Consolidation (Genspark): Provides 50 GB to 1 TB of cloud storage with built-in database builders (CRM, hiring, project tracking), consolidating separate subscriptions for text, image, voice, and automation into a single workspace.
