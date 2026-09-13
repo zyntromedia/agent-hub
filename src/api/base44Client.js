@@ -1,15 +1,28 @@
-// @ts-ignore
 import { createClient } from '@base44/sdk';
 import { appParams } from '@/lib/app-params';
 
-const { appId, token, functionsVersion, appBaseUrl } = appParams;
+// Destructure with clear naming
+const {
+  appId,
+  token,
+  functionsVersion,
+  appBaseUrl
+} = appParams;
 
-//Create a client with authentication required
+// 🛡️ Validate required fields — fail fast, clear errors
+if (!appId) {
+  throw new Error('[Base44] Missing required parameter: appId');
+}
+if (!token) {
+  throw new Error('[Base44] Missing required parameter: token');
+}
+
+// Create client — safe, consistent, auto-auth
 export const base44 = createClient({
   appId,
   token,
   functionsVersion,
-  serverUrl: '',
-  requiresAuth: false,
-  appBaseUrl
+  appBaseUrl,
+  // ✅ Removed empty `serverUrl: ''` — let SDK use its default
+  requiresAuth: !!token, // ✅ Auto-enable auth when token is present
 });
