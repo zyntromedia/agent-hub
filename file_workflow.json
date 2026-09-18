@@ -1,0 +1,200 @@
+{
+  "metadata": {
+    "name": "Workflow จัดระเบียบไฟล์ - Automated File Management System",
+    "version": "1.0.0",
+    "description": "ระบบอัตโนมัติสำหรับการจัดการไฟล์ที่มีประสิทธิภาพ",
+    "author": "ZyntroAI",
+    "languages": ["en", "th"],
+    "created": "2026-09-18T23:40:00+07:00"
+  },
+  "dependencies": {
+    "python": ">=3.10",
+    "packages": {
+      "watchdog": ">=4.0.0",
+      "GitPython": ">=3.1.40",
+      "pydub": ">=0.25.1"
+    },
+    "system": {
+      "ffmpeg": "required for WAV→MP3 conversion"
+    }
+  },
+  "configuration": {
+    "defaults": {
+      "watch_dir": "./watch_folder",
+      "output_dir": "./organized_files",
+      "git_repo_path": "./organized_files",
+      "dashboard_log": "./workflow_dashboard.json",
+      "log_file": "./file_workflow.log"
+    },
+    "organization_rules": {
+      "documents": {
+        "name_en": "Documents",
+        "name_th": "เอกสาร",
+        "extensions": [".txt", ".md", ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".csv", ".ppt", ".pptx"]
+      },
+      "audio": {
+        "name_en": "Audio",
+        "name_th": "เสียง",
+        "extensions": [".wav", ".mp3", ".flac", ".aac", ".ogg", ".m4a"]
+      },
+      "images": {
+        "name_en": "Images",
+        "name_th": "รูปภาพ",
+        "extensions": [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".svg", ".webp"]
+      },
+      "videos": {
+        "name_en": "Videos",
+        "name_th": "วิดีโอ",
+        "extensions": [".mp4", ".mkv", ".avi", ".mov", ".webm"]
+      },
+      "archives": {
+        "name_en": "Archives",
+        "name_th": "ไฟล์บีบอัด",
+        "extensions": [".zip", ".rar", ".7z", ".tar", ".gz"]
+      },
+      "code": {
+        "name_en": "Code",
+        "name_th": "โค้ด",
+        "extensions": [".py", ".go", ".js", ".ts", ".html", ".css", ".sh"]
+      },
+      "other": {
+        "name_en": "Other",
+        "name_th": "อื่นๆ",
+        "extensions": []
+      }
+    },
+    "conversion_rules": {
+      ".txt": {
+        "target_ext": ".md",
+        "action": "convert_txt_to_md",
+        "category": "documents",
+        "enabled": true
+      },
+      ".wav": {
+        "target_ext": ".mp3",
+        "action": "convert_wav_to_mp3",
+        "category": "audio",
+        "bitrate": "128k",
+        "enabled": true
+      }
+    },
+    "naming_pattern": "{category}_{timestamp}_{original_stem}",
+    "timestamp_format": "%Y%m%d_%H%M%S",
+    "duplicate_strategy": "append_counter",
+    "git": {
+      "auto_init": true,
+      "auto_commit": true,
+      "commit_message": "Auto-commit: File organized",
+      "timestamp_format": "%Y-%m-%d %H:%M:%S"
+    }
+  },
+  "workflow_steps": [
+    {
+      "step": 1,
+      "name_en": "Analyze File",
+      "name_th": "ตรวจสอบและวิเคราะห์ไฟล์",
+      "class": "AIFileAnalyzer",
+      "description": "Detect type, check conversion needs, assign category",
+      "input": "file_path",
+      "output": {
+        "original_name": "str",
+        "extension": "str",
+        "needs_conversion": "bool",
+        "target_extension": "str|null",
+        "suggested_name": "str",
+        "category": "str",
+        "actions": "array"
+      }
+    },
+    {
+      "step": 2,
+      "name_en": "Convert Format",
+      "name_th": "แปลงรูปแบบไฟล์",
+      "class": "FileConverter",
+      "description": "TXT→Markdown, WAV→MP3",
+      "methods": [
+        {
+          "name": "convert_txt_to_md",
+          "input": ["source_path", "dest_path"],
+          "returns": "bool"
+        },
+        {
+          "name": "convert_wav_to_mp3",
+          "input": ["source_path", "dest_path", "bitrate"],
+          "returns": "bool"
+        }
+      ]
+    },
+    {
+      "step": 3,
+      "name_en": "Organize & Rename",
+      "name_th": "จัดระเบียบและตั้งชื่อใหม่",
+      "class": "FileOrganizer",
+      "description": "Move to category folder, apply naming pattern, resolve duplicates"
+    },
+    {
+      "step": 4,
+      "name_en": "Git Commit",
+      "name_th": "บันทึกด้วย Git",
+      "class": "GitCommitManager",
+      "description": "Version control tracking"
+    },
+    {
+      "step": 5,
+      "name_en": "Dashboard Logging",
+      "name_th": "บันทึกสถิติและตรวจสอบ",
+      "class": "DashboardLogger",
+      "description": "Update JSON dashboard, stats, compliance checks"
+    }
+  ],
+  "source_code": {
+    "file_name": "file_workflow.py",
+    "encoding": "utf-8",
+    "entry_point": "start_workflow()",
+    "usage": {
+      "cli": "python file_workflow.py [watch_directory]",
+      "default_watch": "./watch_folder"
+    },
+    "code": "--- See original Python script ---"
+  },
+  "dashboard_schema": {
+    "files_processed": [
+      {
+        "timestamp": "ISO8601",
+        "original_file": "str",
+        "final_path": "str",
+        "actions": "array[str]",
+        "category": "str",
+        "status": "completed"
+      }
+    ],
+    "statistics": {
+      "total_processed": "int",
+      "last_updated": "ISO8601",
+      "[category]": {
+        "count": "int",
+        "files": "array[str]"
+      }
+    },
+    "compliance_logs": [
+      {
+        "timestamp": "ISO8601",
+        "file": "str",
+        "checks": {
+          "file_named": "bool",
+          "categorized": "bool",
+          "actions_documented": "bool"
+        },
+        "compliant": "bool"
+      }
+    ]
+  },
+  "installation": {
+    "steps": [
+      "pip install watchdog GitPython pydub",
+      "Install ffmpeg for audio conversion",
+      "mkdir watch_folder organized_files",
+      "python file_workflow.py"
+    ]
+  }
+}
