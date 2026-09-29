@@ -1,0 +1,30 @@
+name: 🔐 Env & Secrets Check
+on: [pull_request, push]
+
+jobs:
+  env-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify no .env is committed
+        run: |
+          if git ls-files | grep -E '^\.env(\.|$)' | grep -v '.env.example'; then
+            echo "❌ Found .env files tracked in Git!"
+            git ls-files | grep -E '^\.env'
+            exit 1
+          fi
+          echo "✅ No real .env files committed"
+
+      - name: Verify .env.example is complete
+        run: bash scripts/check-env-example.sh
+
+      - name: Scan for secrets (gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Validate .env format (dotenv-linter)
+        uses: dotenv-linter/action-dotenv-linter@v2
+        with:
+          dotenv_linter_flags: --skip UnorderedKey
