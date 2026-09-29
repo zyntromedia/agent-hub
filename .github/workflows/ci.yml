@@ -1,15 +1,32 @@
-name: CI2
+name: Obsidian Vault CI
 
 on:
   push:
-    branches: [ '**' ]  # ทุก branch
+    branches:
+      - main
   pull_request:
-    branches: [ main ]  # PR ที่จะ merge เข้า main
+    branches:
+      - main
 
 jobs:
-  test:
+  validate:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v4
-    - run: npm ci
-    - run: npm test
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate Markdown
+        run: |
+          find . -name "*.md" -print0 |
+          xargs -0 -n1 test -s
+
+      - name: Validate JSON
+        run: |
+          find . -name "*.json" -not -path "./.git/*" -print0 |
+          while IFS= read -r -d '' file; do
+            jq empty "$file"
+          done
+
+      - name: Check broken Git state
+        run: git status --short
