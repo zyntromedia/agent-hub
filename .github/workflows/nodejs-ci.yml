@@ -2,22 +2,46 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Install dependencies
-      run: npm install
-      working-directory: ./agent-hub
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: agent-hub/package-lock.json
 
-    - name: Build project
-      run: npx webpack
-      working-directory: ./agent-hub
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./agent-hub
+
+      - name: Run tests
+        run: npm test -- --ci
+        working-directory: ./agent-hub
+
+      - name: Build project
+        run: npm run build
+        working-directory: ./agent-hub
+
+      # Optional: Generate coverage
+      - name: Run tests with coverage
+        run: npm test -- --coverage --ci
+        working-directory: ./agent-hub
+
+      # Optional: Upload coverage report
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: agent-hub/coverage/
