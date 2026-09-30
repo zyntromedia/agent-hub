@@ -727,3 +727,5 @@ Release
 [17] deepwiki.com · obsidianmd · obsidian-developer-docsobsidianmd/obsidian-developer-docs | DeepWiki https://deepwiki.com/obsidianmd/obsidian-developer-docs
 [18] Home - Developer Documentation - Obsidian https://docs.obsidian.md/Home
 [19] Build a plugin https://docs.obsidian.md/Plugins/Getting+started/Build+a+plugin
+[20] Mobile development
+https://docs.obsidian.md/Plugins/Getting+started/Mobile+development#Platform-specific+features
