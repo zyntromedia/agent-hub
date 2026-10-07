@@ -1,0 +1,169 @@
+ได้เลยครับ ✅ นี่คือเนื้อหาสำหรับบันทึกเป็นไฟล์ **docs/SheetJS.docx** — จัดรูปแบบเรียบร้อยพร้อมใช้งานครับ 📄
+
+---
+
+# 📘 SheetJS — คู่มือการใช้งาน
+
+**สร้างเมื่อ:** 7 ตุลาคม 2026  
+**แหล่งที่มา:** https://sheetjs.com/  
+**ใบอนุญาต:** Apache 2.0
+
+---
+
+## 1. ภาพรวม
+
+SheetJS เป็นไลบรารีโอเพ่นซอร์สสำหรับจัดการไฟล์ตารางข้อมูล รองรับรูปแบบหลากหลาย เช่น `.xlsx`, `.xls`, `.csv`, `.ods` สามารถอ่าน แปลง สร้าง และแก้ไขข้อมูลได้ทั้งฝั่งเบราว์เซอร์และเซิร์ฟเวอร์
+
+**เวอร์ชันปัจจุบัน:** 0.20.3 (แนะนำ) | `latest` (อัปเดตตลอดเวลา)
+
+---
+
+## 2. รูปแบบไฟล์ที่มีให้เลือกใช้
+
+| ประเภทไฟล์ | คำอธิบาย | ลิงก์ (เวอร์ชัน 0.20.3) |
+|---|---|---|
+| Node.js Package | แพ็กเกจสำหรับ npm/yarn | `https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz` |
+| Standalone Full | ไฟล์เดียว รวมทุกฟีเจอร์ | `https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js` |
+| Mini Build | เวอร์ชันกระชับ ขนาดเล็กกว่า | `https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.mini.min.js` |
+| Shim | รองรับความเข้ากันได้กับสภาพแวดล้อมเก่า | `https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/shim.min.js` |
+| ESM | โมดูลรูปแบบ ES (`import/export`) | `https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs` |
+| TypeScript Types | คำอธิบายประเภทข้อมูล | `https://cdn.sheetjs.com/xlsx-0.20.3/package/types/index.d.ts` |
+
+> สำหรับเวอร์ชันล่าสุดตลอดเวลา เปลี่ยน `xlsx-0.20.3` เป็น `xlsx-latest`
+
+---
+
+## 3. วิธีติดตั้งตามสภาพแวดล้อม
+
+คู่มือทางการ: https://docs.sheetjs.com/docs/getting-started/installation/
+
+### 3.1 เว็บเบราว์เซอร์ (Script Tag)
+```html
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+```
+
+### 3.2 Node.js
+```bash
+npm install xlsx
+```
+```javascript
+import * as XLSX from 'xlsx';
+// หรือ
+const XLSX = require('xlsx');
+```
+
+### 3.3 Deno / Bun
+```javascript
+import * as XLSX from 'https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs';
+```
+
+### 3.4 React / Vue / Webpack
+```bash
+npm install xlsx
+```
+```javascript
+import * as XLSX from 'xlsx';
+```
+
+### 3.5 AMD / RequireJS
+```javascript
+require(['xlsx.full.min.js'], function(XLSX) { /* ... */ });
+```
+
+---
+
+## 4. ตัวอย่างการใช้งานเบื้องต้น
+
+### อ่านไฟล์
+```javascript
+// อ่านไฟล์จากผู้ใช้
+const file = event.target.files[0];
+const reader = new FileReader();
+reader.onload = (e) => {
+  const data = e.target.result;
+  const workbook = XLSX.read(data, { type: 'binary' });
+  // ดึงข้อมูลชีทแรกเป็น JSON
+  const sheetName = workbook.SheetNames[0];
+  const jsonData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+  console.log(jsonData);
+};
+reader.readAsBinaryString(file);
+```
+
+### สร้างและบันทึกไฟล์
+```javascript
+// ข้อมูลตัวอย่าง
+const data = [
+  { ชื่อ: 'สมชาย', อายุ: 30 },
+  { ชื่อ: 'สมศรี', อายุ: 28 }
+];
+
+// แปลงเป็นชีท
+const worksheet = XLSX.utils.json_to_sheet(data);
+const workbook = XLSX.utils.book_new();
+XLSX.utils.book_append_sheet(workbook, worksheet, 'รายการ');
+
+// บันทึกไฟล์
+XLSX.writeFile(workbook, 'ข้อมูล.xlsx');
+```
+
+---
+
+## 5. ความปลอดภัย & การดูแลรักษา
+
+- **แนะนำ: บันทึกไฟล์ไว้ในโปรเจกต์เอง (Vendoring)** — ลดการพึ่งพา CDN ภายนอก เพิ่มความปลอดภัยและทำงานแบบออฟไลน์ได้
+- รับข่าวสารอัปเดตความปลอดภัย: https://cdn.sheetjs.com/advisories
+- ติดตามเวอร์ชันใหม่ผ่าน RSS: https://git.sheetjs.com/sheetjs/sheetjs/tags.rss
+- เก็บโค้ดหลัก: https://git.sheetjs.com/SheetJS/sheetjs
+
+---
+
+## 6. ระบบนิเวศ SheetJS — โปรเจกต์ย่อย
+
+| โปรเจกต์ | หน้าที่ | ที่อยู่ |
+|---|---|---|
+| **xlsx-cli** | เครื่องมือคำสั่ง แปลงไฟล์ผ่าน Terminal | https://cdn.sheetjs.com/xlsx-cli |
+| **ssf** | จัดรูปแบบตัวเลข/วันที่ ตามมาตรฐาน ECMA-376 | https://cdn.sheetjs.com/ssf |
+| **crc-32** | คำนวณค่าตรวจสอบความถูกต้องของไฟล์ | https://cdn.sheetjs.com/crc-32 |
+| **printj** | จัดรูปแบบข้อความตามรูปแบบ `printf` | https://cdn.sheetjs.com/printj |
+| **frac** | แปลงทศนิยมเป็นเศษส่วน | https://cdn.sheetjs.com/frac |
+
+---
+
+## 7. การแก้ไขปัญหาทั่วไป
+
+| ปัญหา | สาเหตุที่เป็นไปได้ | วิธีแก้ |
+|---|---|---|
+| "unsupported file type" | นามสกุลไฟล์ไม่ตรงกับเนื้อหา / ไฟล์เสีย | ตรวจสอบนามสกุลไฟล์, เปิดใน Excel เพื่อตรวจสอบความสมบูรณ์ |
+| ข้อมูลอ่านไม่ครบ | ขอบเขตข้อมูลในชีทกว้างกว่าที่คาด | ระบุ `range` หรือตรวจสอบโครงสร้างข้อมูล |
+| แสดงภาษาไทยไม่ถูกต้อง | ปัญหาการเข้ารหัส | ใช้ `type: 'binary'` หรือ `'array'` แทน `'base64'` |
+
+---
+
+## 8. ใบอนุญาต
+
+เผยแพร่ภายใต้สัญญาอนุญาต Apache 2.0 — รายละเอียด: https://docs.sheetjs.com/docs/miscellany/license  
+**เงื่อนไขสำคัญ:** ต้องระบุแหล่งที่มาเมื่อนำไปใช้งาน
+
+---
+
+## 9. ลิงก์อ้างอิง
+
+- เอกสารทางการ: https://docs.sheetjs.com/
+- CDN ดาวน์โหลด: https://cdn.sheetjs.com/
+- ที่เก็บโค้ด: https://git.sheetjs.com/SheetJS/sheetjs
+- หน้าโครงการหลัก: https://sheetjs.com/
+
+---
+
+## 📌 บันทึกสำหรับผู้ใช้
+
+- ไฟล์นี้จัดทำขึ้นเพื่ออ้างอิงการใช้งาน SheetJS ภายในโปรเจกต์
+- หากพบข้อผิดพลาดหรือต้องการปรับปรุง สามารถแก้ไขได้ตามความเหมาะสม
+- อัปเดตเนื้อหาเมื่อมีการเปลี่ยนแปลงเวอร์ชันที่สำคัญ
+
+---
+
+ต้องการให้เพิ่มเนื้อหาอะไรเข้าไปอีกไหมครับ เช่น ตัวอย่างการผสานเข้ากับโปรเจกต์เฉพาะ หรือกรณีใช้งานขั้นสูงได้เลยครับ 🚀
+
+ฉันสามารถจัดรูปแบบนี้เป็นเอกสาร Word (.docx) ที่พร้อมดาวน์โหลดได้ — กด **Fast** แล้วเลือก **Pro** เพื่อรับไฟล์ครับ
