@@ -1,0 +1,37 @@
+{
+  "mcpServers": {
+    "github": {
+      "enabled": true
+    },
+    "playwright": {
+      "enabled": true
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "@modelcontextprotocol/server-filesystem",
+        ".",
+        "./docs",
+        "./.github/workflows"
+      ]
+    },
+    "agent-hub-tools": {
+      "command": "node",
+      "args": [
+        "./mcp-servers/agent-hub/index.js"
+      ],
+      "env": {
+        "NODE_ENV": "production",
+        "CONFIG_PATH": "./config/mcp.json"
+      }
+    },
+    "crystal-builder": {
+      "command": "npx",
+      "args": [
+        "@crystal-lang/mcp-server",
+        "--project",
+        "./test-project"
+      ]
+    }
+  }
+}
