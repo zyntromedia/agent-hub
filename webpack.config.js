@@ -1,42 +1,67 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 module.exports = {
-  entry: './src/index.jsx', // เปลี่ยนเป็น .jsx
+  entry: './src/index.jsx',
   output: {
-    filename: 'main.js',
+    filename: isProduction ? 'main.[contenthash].js' : 'main.js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
+    assetModuleFilename: 'assets/[name].[hash][ext]',
   },
-  mode: 'development', // เปลี่ยนเป็น dev ตอน dev จะได้มี source map
+  mode: isProduction ? 'production' : 'development',
+  devtool: isProduction ? 'source-map' : 'eval-cheap-module-source-map',
+  devServer: {
+    static: './dist',
+    hot: true,
+    open: true,
+    port: 3000,
+    historyApiFallback: true,
+  },
   module: {
     rules: [
       {
-        test: /\.jsx?$/, // รองรับทั้ง .js และ .jsx
+        test: /\.jsx?$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env', '@babel/preset-react'] // สำคัญ: preset-react
-          }
+            presets: [
+              ['@babel/preset-env', { targets: 'defaults' }],
+              '@babel/preset-react'
+            ],
+            cacheDirectory: true,
+          },
         },
       },
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
-      }
+      },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource',
+      },
     ],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './public/index.html'
-    })
+      template: './public/index.html',
+      minify: isProduction,
+    }),
   ],
   resolve: {
-    extensions: ['.js', '.jsx'], // import ไม่ต้องใส่ .jsx
+    extensions: ['.js', '.jsx', '.json'],
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+    },
   },
-  devServer: {
-    static: './dist',
-    hot: true,
-  }
+  optimization: {
+    minimize: isProduction,
+    splitChunks: {
+      chunks: 'all',
+    },
+  },
 };
