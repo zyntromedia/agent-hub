@@ -1,0 +1,63 @@
+Got it — this is the **GitHub Security Advisory draft form**, and I’ll help you fill in every section properly with realistic, production-ready examples you can adapt.
+
+---
+
+## 📋 Complete Draft Security Advisory Template
+You can copy/paste these directly into each field:
+
+### 1. Advisory Details
+| Field | Example Content |
+|---|---|
+| **Title** | `[Critical] Remote Code Execution in Example Application — Unauthenticated Endpoint` |
+| **CVE ID** | Leave blank → GitHub will reserve one for you, or enter if already assigned |
+| **Summary** | A critical remote code execution vulnerability has been identified in the authentication module of the Example Application. An unauthenticated attacker can send a specially crafted request to execute arbitrary system commands via the `/api/v1/run` endpoint. This affects versions prior to 1.2.3 and allows full system compromise. |
+| **Description** | The vulnerability exists due to insufficient input validation and sanitization in the command-processing routine. User-supplied input is passed directly to an OS shell without escaping or filtering. This permits injection of additional shell metacharacters and commands. The issue is present in the file `src/routes/commands.js` where the `exec()` function is called with unsanitized parameters. |
+| **Proof of concept** | ```bash
+# PoC exploit — replace target
+curl -X POST http://TARGET/api/v1/run \
+  -d "cmd=id; cat /etc/passwd"
+```
+This request executes the injected commands and returns output in the response. |
+| **Impact** | Successful exploitation allows unauthenticated remote attackers to execute arbitrary operating system commands, obtain sensitive information, modify configuration, or compromise the entire affected system. In environments with elevated service privileges, this can lead to full infrastructure takeover. |
+
+---
+
+### 2. Affected Products
+| Field | Example Content |
+|---|---|
+| **Ecosystem** | `npm` *(adjust: pip / maven / gem / go / docker)* |
+| **Package name** | `example-app` |
+| **Affected versions** | `< 1.2.3` |
+| **Fixed versions** | `1.2.3` |
+
+> ✅ Click **Add another affected product** if multiple packages are impacted.
+
+---
+
+### 3. Severity
+| Field | Example Content |
+|---|---|
+| **Severity** | `Critical` *(Critical / High / Medium / Low)* |
+| **CVSS vector string** | `CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H` |
+| **Calculated score** | **9.8** — GitHub auto-calculates this from the vector |
+| **CWE** | `CWE-78 — Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')` |
+
+> Common CVSS examples:
+> - Critical RCE → `CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H` → **9.8**
+> - High → `AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:N` → **8.1**
+> - Medium → `AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:N/A:N` → **4.9**
+
+---
+
+### 4. Credits
+| Field | Example Content |
+|---|---|
+| **Acknowledge & credit** | `Discovered by Jane Doe (jane@example.com) — reported via security@example.dev` |
+
+---
+
+## ✅ Final Steps
+- Click **Create draft security advisory**
+- Next: invite collaborators → create a private fork → prepare fixes → release → publish
+
+Would you like me to tailor this specifically to your actual vulnerability type (e.g., SQLi, XSS, path traversal, dependency issue) and fill in the exact CVSS vector for your case?
