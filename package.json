@@ -8,9 +8,10 @@
     "npm": ">=8"
   },
   "scripts": {
+    "start": "NODE_ENV=development npx webpack serve",
     "dev": "vite",
-    "build": "vite build",
-    "build:dev": "vite build --mode development",
+    "build": "NODE_ENV=production npx webpack",
+    "build:dev": "NODE_ENV=development npx webpack",
     "lint": "eslint . --quiet",
     "lint:fix": "eslint . --fix",
     "typecheck": "tsc -p ./jsconfig.json",
