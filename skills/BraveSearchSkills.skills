@@ -334,3 +334,33 @@ Cursor Skills: https://cursor.com/docs/context/skills
 Codex Skills: https://developers.openai.com/codex/skills
 
 OpenClaw Skills: https://docs.openclaw.ai/tools/skills
+
+I'll restructure it into the standard Agent Skills layout: one directory per skill, each with a focused  SKILL.md  (frontmatter + concise instructions), plus a top-level README. Let me create the bundle.
+
+All 8 skills written. Now the top-level README, then package.
+
+Restructured bundle is attached above.
+ 
+Structure (Agent Skills standard):
+ 
+plaintext  
+brave-search-skills/
+├── README.md                 # install + skill reference table
+└── skills/
+    ├── llm-context/SKILL.md  # recommended default for agents
+    ├── answers/SKILL.md      # cited AI answers / research mode
+    ├── web-search/SKILL.md
+    ├── images-search/SKILL.md
+    ├── news-search/SKILL.md
+    ├── videos-search/SKILL.md
+    ├── suggest/SKILL.md
+    └── spellcheck/SKILL.md
+ 
+ 
+What changed vs. the single 11 KB file:
+ 
+- Each skill is now its own directory with a  SKILL.md  containing  name  +  description  frontmatter — the  description  is what agents use for trigger detection, so they load only the relevant skill instead of the whole doc.
+- Each is self-contained (auth header, curl example, key response fields, error codes) and concise.
+- Added a recommended chaining pattern:  spellcheck  →  suggest  →  llm-context  for ambiguous queries.
+ 
+To use: extract and copy  skills/*  into your agent's skills dir (e.g.  ~/.claude/skills/ ,  .cursor/skills/ ,  ~/.agents/skills/ ,  .github/skills/ ), then set  BRAVE_SEARCH_API_KEY . After confirming it works, delete the old flat duplicates ( BraveSearchSkills  and  BraveSearchSkills.skills ) from your repo.
