@@ -1,0 +1,134 @@
+ต่อไปเป็นการพัฒนา Next.js API Error Handling → Middleware → Security → Testing สำหรับ ZyntroAI / Crystal Castle โดยใช้ TypeScript แบบ strict และแยกโมดูลให้พร้อมนำไปใช้จริง
+
+Next, we’ll extend the Next.js API library with centralized error handling, request validation, security middleware, and automated tests.
+
+### 1\. Centralized API Error Handler
+
+ไฟล์ `src/lib/api/http-error.ts`
+
+```typescript
+
+export type ApiErrorCode =
+  | "BAD_REQUEST"
+  | "UNAUTHORIZED"
+  | "FORBIDDEN"
+  | "NOT_FOUND"
+  | "PAYLOAD_TOO_LARGE"
+  | "RATE_LIMIT_EXCEEDED"
+  | "INTERNAL_SERVER_ERROR";
+
+export class HttpError extends Error {
+  constructor(
+    public readonly status: number,
+    public readonly code: ApiErrorCode,
+    message: string,
+  ) {
+    super(message);
+    this.name = "HttpError";
+  }
+}
+
+export function errorResponse(error: unknown): Response {
+  if (error instanceof HttpError) {
+    return Response.json(
+      {
+        error: error.code,
+        message: error.message,
+      },
+      { status: error.status },
+    );
+  }
+
+  // Do not expose internal exception details.
+  return Response.json(
+    {
+      error: "INTERNAL_SERVER_ERROR",
+      message: "An unexpected error occurred",
+    },
+    { status: 500 },
+  );
+}
+```
+
+### 2\. Reusable API Handler
+
+ไฟล์ `src/lib/api/handler.ts`
+
+```typescript
+
+import { errorResponse } from "./http-error";
+
+type ApiHandler = (request: Request) => Promise<Response>;
+
+export function withErrorHandling(
+  handler: ApiHandler,
+): ApiHandler {
+  return async (request: Request): Promise<Response> => {
+    try {
+      return await handler(request);
+    } catch (error: unknown) {
+      return errorResponse(error);
+    }
+  };
+}
+```
+
+Usage in `src/app/api/prompt/route.ts`:
+
+```typescript
+
+import { HttpError } from "@/lib/api/http-error";
+import { withErrorHandling } from "@/lib/api/handler";
+
+export const POST = withErrorHandling(async (request) => {
+  const contentType = request.headers.get("content-type");
+
+  if (!contentType?.includes("application/json")) {
+    throw new HttpError(
+      400,
+      "BAD_REQUEST",
+      "Content-Type must be application/json",
+    );
+  }
+
+  const body: unknown = await request.json();
+
+  return Response.json({
+    status: "accepted",
+    received: body !== null,
+  });
+});
+```
+
+### 3\. Architecture
+
+Client / Agent
+
+Request + Authentication
+
+Next.js Route Handler
+
+Validate input · Authorize · Apply limits
+
+Service Layer
+
+Business logic · External API calls
+
+Centralized Error Handler
+
+Consistent HTTP status + sanitized response
+
+### 4\. Recommended next modules
+
+| Module                   | Responsibility                        |
+| ------------------------ | ------------------------------------- |
+| validation/              | Zod schemas and input limits          |
+| security/auth.ts         | Authentication and authorization      |
+| security/rate-limit.ts   | Per-user and per-tenant quotas        |
+| api/request-id.ts        | Request correlation IDs               |
+| observability/logger.ts  | Structured logs with secret redaction |
+| tests/api-errors.test.ts | Error mapping and regression tests    |
+
+Security note: รองรับ Input ขนาดใหญ่ได้ตามความต้องการ แต่ควรกำหนดเพดาน Body, Timeout, Concurrency และต้นทุนต่อ Request อย่างชัดเจน ไม่ควรเปิดการใช้ทรัพยากรแบบไม่จำกัด
+
+Next step: Implement the authentication and rate-limiting modules, then add tests for `400`, `401`, `403`, `413`, `429`, and `500` responses.
