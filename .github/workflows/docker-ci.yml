@@ -210,3 +210,17 @@ jobs:
           cache-to: type=gha,mode=max
           build-args: |
             NODE_ENV=production
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false        # reads version from packageManager field (pnpm@7.5.1)
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm               # was: cache: npm
+          # cache-dependency-path defaults to pnpm-lock.yaml — no need to set it
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile   # pnpm's equivalent of npm ci
