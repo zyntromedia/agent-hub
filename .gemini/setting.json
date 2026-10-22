@@ -2,7 +2,54 @@
   "mcpServers": {
     "vercel": {
       "command": "npx",
-      "args": ["mcp-remote", "https://mcp.vercel.com"]
+      "args": [
+        "-y",
+        "mcp-remote@latest",
+        "https://mcp.vercel.com"
+      ],
+      "env": {
+        "VERCEL_ACCESS_TOKEN": "REPLACE_WITH_YOUR_TOKEN"
+      }
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem@latest",
+        "/ABSOLUTE/PATH/TO/agent-hub"
+      ]
+    },
+    "fetch": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-fetch@latest"
+      ]
+    },
+    "github": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-github@latest"
+      ],
+      "env": {
+        "GITHUB_TOKEN": "REPLACE_WITH_YOUR_TOKEN",
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "REPLACE_WITH_YOUR_TOKEN"
+      }
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@latest"
+      ]
+    },
+    "memory": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory@latest"
+      ]
     }
   }
 }
