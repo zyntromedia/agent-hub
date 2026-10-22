@@ -23,10 +23,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Reads version from "packageManager" field in package.json (pnpm@7.5.1)
+      # Pin version explicitly (packageManager field was dropped from package.json).
+      # Bump to 9.x + regenerate pnpm-lock.yaml when convenient.
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
+          version: 7.5.1
           run_install: false
 
       - name: Setup Node.js
