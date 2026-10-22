@@ -1,6 +1,7 @@
 name: CI & Release Pipeline
 
-run-name: ${{ github.actor }} • Node ${{ matrix.node }} • ${{ matrix.os }}
+run-name: "CI & Release • ${{ github.actor }} • ${{ github.event_name }} • ${{ github.ref_name }}"
+
 
 on:
   push:
