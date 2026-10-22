@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: Lint · Typecheck · Test · Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Reads version from "packageManager" field in package.json (pnpm@7.5.1)
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          # defaults to pnpm-lock.yaml — no cache-dependency-path needed
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Type check
+        run: pnpm typecheck
+        # If you remove the "typecheck" script, use instead:
+        # run: npx tsc --noEmit
+
+      - name: Test (vitest + coverage)
+        run: pnpm test -- --coverage
+        env:
+          CI: true
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-${{ github.sha }}
+          path: coverage/
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Build (webpack, production)
+        run: pnpm build
+        env:
+          NODE_ENV: production
+          # Placeholders so build-time env reads don't fail in CI.
+          # Replace with real var names from your .env.example:
+          INTERNAL_API_KEY: ci-test-placeholder
+          NEXT_TELEMETRY_DISABLED: "1"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ github.sha }}
+          path: |
+            dist/
+            build/
+          if-no-files-found: ignore
+          retention-days: 7
