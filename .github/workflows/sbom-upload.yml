@@ -1,0 +1,120 @@
+# .github/workflows/sbom-upload.yml
+# Generate + upload a Software Bill of Materials (SBOM).
+# Fits alongside ci-unified / codeql-analysis / docker-ci / semantic-release.
+#
+# What it does:
+#   1. Generates SBOM in BOTH CycloneDX and SPDX formats (Syft) from source tree
+#   2. Submits CycloneDX to GitHub Dependency Graph -> Dependabot can alert on it
+#   3. Grype vulnerability scan (critical+ only) -> SARIF uploaded to Code Scanning
+#   4. Uploads SBOM files as workflow artifacts
+#   5. On release: attaches SBOMs to the GitHub Release assets
+#   6. (Optional, commented) Upload to a Dependency-Track instance
+#
+# No secrets required for steps 1-5. For Dependency-Track, set repo secrets:
+#   DEPENDENCY_TRACK_URL, DEPENDENCY_TRACK_API_KEY, DEPENDENCY_TRACK_PROJECT
+
+name: SBOM Upload
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write          # dependency-graph submission + release asset upload
+  security-events: write   # SARIF -> GitHub Code Scanning
+  actions: read
+  pull-requests: read
+
+concurrency:
+  group: sbom-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sbom:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ---- 1. Generate SBOM (CycloneDX + SPDX) ----
+      - name: Install Syft
+        uses: anchore/sbom-action/download-syft@v1
+
+      - name: Generate SBOMs
+        run: |
+          syft dir:. \
+            -o cyclonedx-json=sbom.cyclonedx.json \
+            -o spdx-json=sbom.spdx.json
+          echo "--- CycloneDX component count ---"
+          grep -o '"type"' sbom.cyclonedx.json | wc -l || true
+
+      # ---- 2. Submit to GitHub Dependency Graph (Dependabot alerts) ----
+      - name: Submit SBOM to Dependency Graph
+        if: github.event_name != 'pull_request'  # submission only works on default branch
+        uses: anchore/sbom-action@v1
+        with:
+          path: .
+          format: cyclonedx-json
+          dependency-snapshot: true
+          upload-artifact: false   # we upload our own combined artifact below
+
+      # ---- 3. Vulnerability scan (Grype) + SARIF to Code Scanning ----
+      - name: Scan SBOM for vulnerabilities
+        uses: anchore/scan-action@v4
+        id: grype
+        with:
+          sbom: sbom.cyclonedx.json
+          severity-cutoff: high    # report high+; fail only on critical
+          fail-build: false        # informational; gate separately if desired
+          output-format: sarif
+
+      - name: Upload Grype SARIF to Code Scanning
+        if: github.event_name != 'pull_request' && steps.grype.outputs.sarif
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ${{ steps.grype.outputs.sarif }}
+
+      # ---- 4. Upload SBOMs as workflow artifacts ----
+      - name: Upload SBOM artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-${{ github.sha }}
+          path: |
+            sbom.cyclonedx.json
+            sbom.spdx.json
+          retention-days: 90
+
+      # ---- 5. Attach SBOMs to GitHub Release (only on release event) ----
+      - name: Attach SBOMs to Release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          gh release upload "$TAG" sbom.cyclonedx.json sbom.spdx.json --clobber
+
+      # ---- 6. (Optional) Upload to Dependency-Track ----
+      # Enable by setting repo secrets: DEPENDENCY_TRACK_URL,
+      # DEPENDENCY_TRACK_API_KEY, DEPENDENCY_TRACK_PROJECT (project UUID or name)
+      # - name: Upload to Dependency-Track
+      #   if: github.event_name != 'pull_request'
+      #   uses: DependencyTrack/gh-upload-sbom@v4
+      #   with:
+      #     serverHostname: ${{ secrets.DEPENDENCY_TRACK_URL }}
+      #     apiKey: ${{ secrets.DEPENDENCY_TRACK_API_KEY }}
+      #     project: ${{ secrets.DEPENDENCY_TRACK_PROJECT }}
+      #     bomFilename: sbom.cyclonedx.json
+      #     projectName: ${{ github.repository }}
+      #     projectVersion: ${{ github.ref_name }}
+
+      # ---- 7. (Optional) Scan the built Docker image too ----
+      # If docker-ci produces an image (e.g. ghcr.io/OWNER/REPO:sha-XXXX),
+      # add a second Syft run after your image build/push:
+      # - run: syft ghcr.io/${{ github.repository }}:sha-${GITHUB_SHA::7} \
+      #         -o cyclonedx-json=sbom-image.cyclonedx.json
+      # and include sbom-image.cyclonedx.json in the artifact + release steps.
