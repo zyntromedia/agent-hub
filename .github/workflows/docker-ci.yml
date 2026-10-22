@@ -39,7 +39,20 @@ jobs:
           cache-dependency-path: package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          if [ ! -f package-lock.json ]; then
+            echo "::error::package-lock.json not found — commit it, or set working-directory if app is in a subfolder"
+            exit 1
+          fi
+          for attempt in 1 2 3; do
+            npm ci --no-audit --no-fund --loglevel=error && break
+            echo "Attempt $attempt failed, retrying in 5s…"
+            sleep 5
+            if [ "$attempt" = "3" ]; then
+              echo "::error::npm ci failed after 3 attempts"
+              exit 1
+            fi
+          done
 
       - name: Run lint
         run: npm run lint
@@ -61,7 +74,20 @@ jobs:
           cache-dependency-path: package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          if [ ! -f package-lock.json ]; then
+            echo "::error::package-lock.json not found — commit it, or set working-directory if app is in a subfolder"
+            exit 1
+          fi
+          for attempt in 1 2 3; do
+            npm ci --no-audit --no-fund --loglevel=error && break
+            echo "Attempt $attempt failed, retrying in 5s…"
+            sleep 5
+            if [ "$attempt" = "3" ]; then
+              echo "::error::npm ci failed after 3 attempts"
+              exit 1
+            fi
+          done
 
       - name: Run tests with coverage
         run: npm test -- --coverage
@@ -74,6 +100,68 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs:
+      - lint
+      - test
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: |
+          if [ ! -f package-lock.json ]; then
+            echo "::error::package-lock.json not found — commit it, or set working-directory if app is in a subfolder"
+            exit 1
+          fi
+          for attempt in 1 2 3; do
+            npm ci --no-audit --no-fund --loglevel=error && break
+            echo "Attempt $attempt failed, retrying in 5s…"
+            sleep 5
+            if [ "$attempt" = "3" ]; then
+              echo "::error::npm ci failed after 3 attempts"
+              exit 1
+            fi
+          done
+
+      - name: Build application
+        run: npm run build
+        env:
+          NODE_ENV: production
+          # Pass build-time env vars here, e.g.:
+          # VITE_API_URL: ${{ vars.VITE_API_URL }}
+
+      - name: Verify build output
+        run: |
+          if [ ! -d dist ] && [ ! -d build ] && [ ! -d .next ]; then
+            echo "::error::Build output not found (expected dist/, build/, or .next/)"
+            exit 1
+          fi
+          echo "Build output size:"
+          du -sh dist build .next 2>/dev/null || true
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output-${{ github.sha }}
+          path: |
+            dist/
+            build/
+            .next/
+          if-no-files-found: ignore
+          retention-days: 7
+
   docker:
     name: Docker Build and Push
     runs-on: ubuntu-latest
@@ -81,6 +169,7 @@ jobs:
     needs:
       - lint
       - test
+      - build
 
     steps:
       - name: Checkout repository
@@ -121,21 +210,3 @@ jobs:
           cache-to: type=gha,mode=max
           build-args: |
             NODE_ENV=production
-
-- name: Install dependencies
-  run: |
-    # Fail fast if lockfile is missing/out of sync — npm ci gives a clear error
-    if [ ! -f package-lock.json ]; then
-      echo "::error::package-lock.json not found — commit it (or set working-directory if app is in a subfolder)"
-      exit 1
-    fi
-    # Retry loop for transient registry/network flakiness
-    for attempt in 1 2 3; do
-      npm ci --no-audit --no-fund --loglevel=error && break
-      echo "Attempt $attempt failed, retrying in 5s…"
-      sleep 5
-      if [ "$attempt" = "3" ]; then
-        echo "::error::npm ci failed after 3 attempts"
-        exit 1
-      fi
-    done
