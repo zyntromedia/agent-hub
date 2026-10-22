@@ -121,3 +121,21 @@ jobs:
           cache-to: type=gha,mode=max
           build-args: |
             NODE_ENV=production
+
+- name: Install dependencies
+  run: |
+    # Fail fast if lockfile is missing/out of sync — npm ci gives a clear error
+    if [ ! -f package-lock.json ]; then
+      echo "::error::package-lock.json not found — commit it (or set working-directory if app is in a subfolder)"
+      exit 1
+    fi
+    # Retry loop for transient registry/network flakiness
+    for attempt in 1 2 3; do
+      npm ci --no-audit --no-fund --loglevel=error && break
+      echo "Attempt $attempt failed, retrying in 5s…"
+      sleep 5
+      if [ "$attempt" = "3" ]; then
+        echo "::error::npm ci failed after 3 attempts"
+        exit 1
+      fi
+    done
