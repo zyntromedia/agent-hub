@@ -1,0 +1,104 @@
+# ---- Dependencies ----
+node_modules/
+.pnpm-store/
+.pnp
+.pnp.js
+
+# ---- Build outputs (Vite + webpack) ----
+dist/
+dist-ssr/
+build/
+out/
+.next/
+.nuxt/
+.output/
+*.tsbuildinfo
+*.user.js
+
+# ---- Test / coverage (vitest) ----
+coverage/
+.nyc_output/
+test-results/
+playwright-report/
+.playwright/
+
+# ---- Environment / secrets ----
+.env
+.env.local
+.env.*.local
+.env.development
+.env.test
+.env.production
+# Keep the template committed:
+!.env.example
+
+# Other secret material
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+service-account.json
+.secrets
+
+# ---- Logs ----
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# ---- Caches ----
+.cache/
+.parcel-cache/
+.eslintcache
+.stylelintcache
+.turbo/
+.vite/
+*.tsbuildinfo
+
+# ---- IDE / editors ----
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json.example
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*~
+
+# ---- OS ----
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ---- AI assistant local dirs (per-user; commit only if shared config is intended) ----
+.claude/
+.gemini/
+.grok/
+.cursor/
+.windsurf/
+.continue/
+
+# ---- Docker (image-local, not source) ----
+.dockerignore is committed intentionally
+# (no entries needed here; build context is handled by .dockerignore)
+
+# ---- Kubernetes / runtime (uncomment if you generate local manifests) ----
+# *.local.yaml
+# k8s/overlays/local/
+
+# ---- Python backend (uncomment if/when a backend is added) ----
+# __pycache__/
+# *.py[cod]
+# .venv/
+# venv/
+# .pytest_cache/
+# .mypy_cache/
+# *.egg-info/
