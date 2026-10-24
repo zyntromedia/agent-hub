@@ -1,0 +1,145 @@
+🚀 OpenRouter API — Complete Exploration Guide
+ 
+ 
+ 
+📌 Basics
+ 
+Item Detail 
+Base URL  https://openrouter.ai/api/v1 [__LINK_ICON] 
+Auth  Authorization: Bearer sk-or-...  (API key starts with  sk-or- )[__LINK_ICON] 
+API Style OpenAI-compatible — drop-in replacement[__LINK_ICON]! 
+OpenAPI Spec openapi.yaml / openapi.json[__LINK_ICON] 
+Models 400+ models across 70+ providers[__LINK_ICON] 
+ 
+ 
+ 
+🔑 Authentication
+ 
+- Header:  Authorization: Bearer <YOUR_KEY>  
+- Optional headers (recommended):
+-  HTTP-Referer : your app URL
+-  X-Title : your app name 
+- Get a key: openrouter.ai/keys → Create Key 
+ 
+ 
+ 
+📡 Core Endpoints
+ 
+1️⃣ Chat Completions — Main Endpoint
+ 
+http  
+POST https://openrouter.ai/api/v1/chat/completions
+ 
+ 
+Body:
+ 
+json  
+{
+  "model": "openai/gpt-4o",
+  "messages": [
+    {"role": "user", "content": "Hello!"}
+  ]
+}
+ 
+ 
+Python example:
+ 
+python  
+from openai import OpenAI
+client = OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key="sk-or-..."
+)
+resp = client.chat.completions.create(
+    model="openai/gpt-4o",
+    messages=[{"role": "user", "content": "Hi"}]
+)
+print(resp.choices[0].message.content)
+```[[__LINK_ICON]](https://openrouter.zendesk.com/hc/en-us/articles/53571306246811-What-is-the-OpenRouter-API-base-URL-and-how-do-I-point-an-existing-SDK-at-it?f_link_type=f_linkinlinenote&flow_extra=eyJpbmxpbmVfZGlzcGxheV9wb3NpdGlvbiI6MCwiZG9jX3Bvc2l0aW9uIjowLCJkb2NfaWQiOiI1MDg2YzkwZmU1ZTg3ZWIxLTc3Y2NmZTliMDczMWExYmUifQ%3D%3D&inline_doc_id=5086c90fe5e87eb1-77ccfe9b0731a1be)
+
+### 2️⃣ List All Models
+```http
+GET https://openrouter.ai/api/v1/models
+ 
+ 
+→ Returns full catalog with pricing, context length, status 
+ 
+3️⃣ Usage & Stats
+ 
+http  
+GET https://openrouter.ai/api/v1/credits
+GET https://openrouter.ai/api/v1/usage
+ 
+ 
+→ Check balance, token usage, cost breakdown 
+ 
+4️⃣ Streaming
+ 
+Set  "stream": true  — SSE format responses 
+ 
+ 
+ 
+🧰 Key Features
+ 
+Feature What It Does 
+Unified API One endpoint for GPT, Claude, Gemini, Llama, DeepSeek...[__LINK_ICON] 
+Auto Fallback/Routing Retry & failover to different providers automatically[__LINK_ICON] 
+Model Aliases  ~openai/gpt-sol-latest  → always latest version[__LINK_ICON] 
+Cost & Usage Tracking Per-request stats: tokens, cost, latency, model used[__LINK_ICON] 
+Observability/Broadcast Send traces to Datadog, Langfuse, LangSmith, OTLP, S3[__LINK_ICON] 
+Prompt Caching Reduce cost up to 90% on repeated prompts[__LINK_ICON] 
+Structured Outputs Enforce JSON schema in responses[__LINK_ICON] 
+ 
+ 
+ 
+🔗 Quick Code Examples
+ 
+JavaScript / Fetch
+ 
+javascript  
+const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+  method: "POST",
+  headers: {
+    "Authorization": "Bearer sk-or-...",
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    model: "anthropic/claude-3.7-sonnet",
+    messages: [{ role: "user", content: "Hello" }]
+  })
+});
+const data = await res.json();
+console.log(data);
+```[[__LINK_ICON]](https://openrouter.ai/docs/guides/overview/auth/oauth?f_link_type=f_linkinlinenote&flow_extra=eyJkb2NfcG9zaXRpb24iOjAsImRvY19pZCI6ImIwNDdmZGJjODFjNjUxNjAtOTQ0M2M0Y2Q0MWNlOTEwNCIsImlubGluZV9kaXNwbGF5X3Bvc2l0aW9uIjowfQ%3D%3D&inline_doc_id=b047fdbc81c65160-9443c4cd41ce9104)
+
+### cURL
+```bash
+curl https://openrouter.ai/api/v1/chat/completions \
+  -H "Authorization: Bearer sk-or-..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "google/gemini-2.5-pro",
+    "messages": [{"role": "user", "content": "Hi"}]
+  }'
+ 
+ 
+ 
+ 
+📚 Resources
+ 
+- Quickstart: openrouter.ai/docs/quickstart 
+- API Reference: openrouter.ai/docs/api_reference/overview 
+- Models: openrouter.ai/models 
+- Request Builder: Interactive tool to generate code snippets 
+ 
+ 
+ 
+What would you like to dive deeper into? I can help with:
+ 
+- ✅ Streaming responses
+- ✅ Structured outputs / function calling
+- ✅ Routing & fallbacks
+- ✅ Usage stats & observability integration
+- ✅ Specific model examples
+ 
+Just say the word! 😊
