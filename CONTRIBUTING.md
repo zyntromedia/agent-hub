@@ -284,4 +284,5 @@ git push origin main
     .env
 เอาไปวางแล้ว PR แรกของ contributor จะง่ายขึ้นเยอะเลย
 
-อยากให้ผมเพิ่มส่วน "Code of Conduct" หรือ "Good First Issues" ให้ด้วยไหมคะ?
+- 🤝 **[Code of Conduct](./CODE_OF_CONDUCT.md)** — มาตรฐานชุมชนของเรา
+- 🎯 **[Good First Issues](./docs/GOOD_FIRST_ISSUES.md)** — เริ่มต้นมีส่วนร่วมได้ง่ายๆ
