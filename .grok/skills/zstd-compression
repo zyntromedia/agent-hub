@@ -1,0 +1,43 @@
+---
+name: zstd-compression
+description: Benchmark data, compression ratios, and performance findings for Zstandard (zstd) — fast, lossless compression algorithm by Meta
+version: "1.0.0"
+status: active
+author: zyntromedia
+created: 2026-08-08
+updated: 2026-10-24
+
+tags:
+  - compression
+  - zstd
+  - performance
+  - benchmark
+  - data
+  - storage
+  - optimization
+
+domain: performance
+category: Compression & Storage
+
+use_cases:
+  - Comparing zstd with gzip, lz4, brotli, and other algorithms
+  - Selecting optimal compression level for speed vs ratio
+  - Reducing file size for storage, backups, and network transfer
+  - Analyzing performance on different file types and workloads
+
+resources:
+  - zstd-compression.csv
+
+related:
+  - [[Compression Algorithms]]
+  - [[Data Optimization]]
+  - [[Storage Efficiency]]
+  - [[File Transfer]]
+  - [[Performance Benchmarking]]
+
+examples:
+  - prompt: "Which compression level should I use for log files?"
+    output: "See zstd-compression.csv for size/speed tradeoffs by level 1–19"
+  - prompt: "Compare zstd vs gzip for JSON data"
+    output: "Benchmark data available in the CSV file"
+---
