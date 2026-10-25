@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Startup Tech Lawyer | Protecting Innovation, Powering Growth</title>
+    <style>
+        :root {
+            --navy: #0F172A;
+            --slate: #334155;
+            --gold: #D4AF37;
+            --light: #F8FAFC;
+            --accent: #2563EB;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { color: var(--slate); background: #fff; line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+        
+        /* Navigation */
+        nav { background: var(--navy); position: sticky; top: 0; z-index: 100; }
+        .nav-inner { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 0; }
+        .logo { color: #fff; font-size: 1.4rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+        .logo span { color: var(--gold); }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { color: #CBD5E1; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: #fff; }
+        .cta-btn { background: var(--accent); color: #fff; padding: 0.7rem 1.4rem; border-radius: 6px; font-weight: 600; transition: background 0.2s; }
+        .cta-btn:hover { background: #1D4ED8; }
+        .menu-toggle { display: none; color: #fff; font-size: 1.8rem; }
+        
+        /* Hero */
+        .hero { background: linear-gradient(135deg, var(--navy) 0%, #1E293B 100%); color: #fff; padding: 5rem 0 6rem; text-align: center; }
+        .hero h1 { font-size: clamp(2.2rem, 5vw, 3.8rem); line-height: 1.2; margin-bottom: 1.5rem; }
+        .hero h1 span { color: var(--gold); }
+        .hero p { font-size: 1.2rem; color: #CBD5E1; max-width: 700px; margin: 0 auto 2.5rem; }
+        .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .btn-primary { background: var(--accent); color: #fff; padding: 0.9rem 2rem; border-radius: 6px; font-weight: 600; font-size: 1rem; }
+        .btn-primary:hover { background: #1D4ED8; }
+        .btn-secondary { background: transparent; color: #fff; border: 2px solid #475569; padding: 0.9rem 2rem; border-radius: 6px; font-weight: 600; font-size: 1rem; }
+        .btn-secondary:hover { border-color: #fff; }
+        
+        /* Section Base */
+        section { padding: 4.5rem 0; }
+        .section-heading { text-align: center; margin-bottom: 3rem; }
+        .section-heading h2 { font-size: 2.2rem; color: var(--navy); margin-bottom: 0.8rem; }
+        .section-heading p { color: #64748B; font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+        
+        /* Services */
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+        .service-card { background: var(--light); padding: 2rem; border-radius: 10px; border: 1px solid #E2E8F0; transition: transform 0.3s, box-shadow 0.3s; }
+        .service-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
+        .service-card h3 { font-size: 1.25rem; color: var(--navy); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .service-card p { color: #64748B; font-size: 0.95rem; margin-bottom: 1.2rem; }
+        .service-card ul { list-style: none; }
+        .service-card li { padding: 0.3rem 0; font-size: 0.92rem; color: var(--slate); }
+        .service-card li::before { content: "✓"; color: var(--accent); font-weight: bold; margin-right: 0.6rem; }
+        
+        /* Why Us */
+        .why-us { background: var(--light); }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 2rem; }
+        .feature-item { text-align: center; padding: 1.5rem; }
+        .feature-item .icon { font-size: 2.5rem; margin-bottom: 1rem; }
+        .feature-item h3 { font-size: 1.1rem; color: var(--navy); margin-bottom: 0.6rem; }
+        .feature-item p { font-size: 0.92rem; color: #64748B; }
+        
+        /* Blog Preview */
+        .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+        .blog-card { border: 1px solid #E2E8F0; border-radius: 10px; overflow: hidden; transition: box-shadow 0.3s; }
+        .blog-card:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.05); }
+        .blog-card-body { padding: 1.5rem; }
+        .blog-card h3 { font-size: 1.05rem; color: var(--navy); margin-bottom: 0.6rem; }
+        .blog-card p { font-size: 0.9rem; color: #64748B; margin-bottom: 0.8rem; }
+        .blog-card a { color: var(--accent); font-weight: 500; font-size: 0.9rem; }
+        
+        /* Contact */
+        .contact-section { background: var(--navy); color: #fff; text-align: center; }
+        .contact-section h2 { font-size: 2rem; margin-bottom: 1rem; }
+        .contact-section p { color: #CBD5E1; margin-bottom: 2rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+        .contact-details { display: flex; justify-content: center; gap: 2.5rem; flex-wrap: wrap; margin-top: 2rem; }
+        .contact-item { text-align: center; }
+        .contact-item strong { display: block; font-size: 1rem; margin-bottom: 0.3rem; }
+        .contact-item span { color: #94A3B8; font-size: 0.9rem; }
+        
+        /* Footer */
+        footer { background: #0A0F1D; color: #94A3B8; padding: 3rem 0 2rem; font-size: 0.9rem; }
+        .footer-bottom { text-align: center; padding-top: 2rem; border-top: #1E293B 1px solid; margin-top: 2rem; }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .menu-toggle { display: block; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+    <div class="container nav-inner">
+        <a href="#" class="logo">⚖️ <span>Startup</span> Tech Lawyer</a>
+        <div class="nav-links">
+            <a href="#about">About</a>
+            <a href="#services">Services</a>
+            <a href="#blog">Resources</a>
+            <a href="#contact">Contact</a>
+            <a href="#contact" class="cta-btn">Get Started</a>
+        </div>
+        <span class="menu-toggle">☰</span>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container">
+        <h1>Protecting Innovation,<br><span>Powering Growth.</span></h1>
+        <p>Your legal partner for the startup journey. Clear, practical legal guidance — from incorporation to funding and beyond.</p>
+        <div class="hero-buttons">
+            <a href="#contact" class="btn-primary">Book a Consultation</a>
+            <a href="#services" class="btn-secondary">Explore Services</a>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section id="about">
+    <div class="container">
+        <div class="section-heading">
+            <h2>Where Law Meets Innovation</h2>
+            <p>We understand startups move fast. Our advice is clear, practical, and built for how your business actually works.</p>
+        </div>
+        <div style="max-width: 800px; margin: 0 auto; text-align: center; font-size: 1.05rem; color: #475569;">
+            <p style="margin-bottom: 1rem;">Welcome to <strong>Startup Tech Lawyer</strong>. We combine deep legal expertise with real-world startup experience to deliver jargon-free advice that protects what you build — without slowing you down.</p>
+            <p>Whether you're incorporating your first company, protecting your technology, negotiating investment terms, or scaling across borders — your innovation deserves strong legal foundations. Let's build it together.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section id="services">
+    <div class="container">
+        <div class="section-heading">
+            <h2>What We Do</h2>
+            <p>Tailored legal services for every stage of your startup journey.</p>
+        </div>
+        <div class="services-grid">
+            <!-- Service 1 -->
+            <div class="service-card">
+                <h3>🏢 Company Formation</h3>
+                <p>Start on solid ground. Choose the right structure and set up correctly from day one.</p>
+                <ul>
+                    <li>Entity selection & registration</li>
+                    <li>Founders' agreements & equity</li>
+                    <li>Shareholder arrangements</li>
+                    <li>Cap table setup</li>
+                </ul>
+            </div>
+            <!-- Service 2 -->
+            <div class="service-card">
+                <h3>💡 Intellectual Property</h3>
+                <p>Your innovation is your most valuable asset — protect it early and protect it well.</p>
+                <ul>
+                    <li>Trademarks & branding</li>
+                    <li>Copyright & software licensing</li>
+                    <li>IP assignments & ownership</li>
+                    <li>Open source compliance</li>
+                </ul>
+            </div>
+            <!-- Service 3 -->
+            <div class="service-card">
+                <h3>🤝 Contracts</h3>
+                <p>Clear agreements that protect value — written for your business, not a textbook.</p>
+                <ul>
+                    <li>Terms of Service & Privacy</li>
+                    <li>Client & vendor contracts</li>
+                    <li>Contractor & employment agreements</li>
+                    <li>SaaS & tech licensing</li>
+                </ul>
+            </div>
+            <!-- Service 4 -->
+            <div class="service-card">
+                <h3>💰 Fundraising</h3>
+                <p>Raise smart, not just fast. Understand the deal before you sign it.</p>
+                <ul>
+                    <li>SAFE notes & convertible instruments</li>
+                    <li>Term sheet review & negotiation</li>
+                    <li>Due diligence preparation</li>
+                    <li>Cap table management</li>
+                </ul>
+            </div>
+            <!-- Service 5 -->
+            <div class="service-card">
+                <h3>🌐 Growth & Compliance</h3>
+                <p>Scale confidently. Navigate new jurisdictions and regulations as you expand.</p>
+                <ul>
+                    <li>Data privacy laws (GDPR, CCPA)</li>
+                    <li>Cross-border expansion</li>
+                    <li>Mergers & acquisitions</li>
+                    <li>Exit strategy planning</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Why Us -->
+<section class="why-us">
+    <div class="container">
+        <div class="section-heading">
+            <h2>Why Work With Us</h2>
+            <p>Traditional law firms weren't built for startups. We were.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="icon">🚀</div>
+                <h3>Startup-First</h3>
+                <p>We speak your language. No unnecessary legalese — just clear answers.</p>
+            </div>
+            <div class="feature-item">
+                <div class="icon">🎯</div>
+                <h3>Tech-Specific</h3>
+                <p>We understand software, platforms, data, and digital business models.</p>
+            </div>
+            <div class="feature-item">
+                <div class="icon">⚡</div>
+                <h3>Efficient</h3>
+                <p>Legal protection shouldn't block progress. We work at startup speed.</p>
+            </div>
+            <div class="feature-item">
+                <div class="icon">🤝</div>
+                <h3>Partnership</h3>
+                <p>Your success matters. We're not just advisors — we're on your team.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Blog / Resources -->
+<section id="blog">
+    <div class="container">
+        <div class="section-heading">
+            <h2>Founder Resources</h2>
+            <p>Practical guides, articles, and templates for every stage.</p>
+        </div>
+        <div class="blog-grid">
+            <div class="blog-card">
+                <div class="blog-card-body">
+                    <h3>Founders' Agreements: 7 Essentials</h3>
+                    <p>What you must discuss before you incorporate — don't learn these the hard way.</p>
+                    <a href="#">Read Article →</a>
+                </div>
+            </div>
+            <div class="blog-card">
+                <div class="blog-card-body">
+                    <h3>IP 101: What to Protect First</h3>
+                    <p>Trademarks vs. Copyrights vs. Patents — a founder's simple guide.</p>
+                    <a href="#">Read Article →</a>
+                </div>
+            </div>
+            <div class="blog-card">
+                <div class="blog-card-body">
+                    <h3>SAFE Notes Explained</h3>
+                    <p>Understand what you're signing — without the legalese.</p>
+                    <a href="#">Read Article →</a>
+                </div>
+            </div>
+            <div class="blog-card">
+                <div class="blog-card-body">
+                    <h3>Your First 5 Contracts</h3>
+                    <p>Which documents you actually need at launch — and which can wait.</p>
+                    <a href="#">Read Article →</a>
+                </div>
+            </div>
+        </div>
+        <p style="text-align: center; margin-top: 2rem;"><a href="#" style="color: var(--accent); font-weight: 500;">View All Articles →</a></p>
+    </div>
+</section>
+
+<!-- Contact -->
+<section id="contact" class="contact-section">
+    <div class="container">
+        <h2>Ready to Get Started?</h2>
+        <p>Protect your innovation and build with confidence. Reach out today — initial consultation available.</p>
+        <a href="mailto:hello@startuptechlawyer.com" class="btn-primary">📧 hello@startuptechlawyer.com</a>
+        <div class="contact-details">
+            <div class="contact-item">
+                <strong>Email</strong>
+                <span>hello@startuptechlawyer.com</span>
+            </div>
+            <div class="contact-item">
+                <strong>Website</strong>
+                <span>startuptechlawyer.com</span>
+            </div>
+            <div class="contact-item">
+                <strong>Location</strong>
+                <span>Samut Prakan, Thailand</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div style="text-align: center;">
+            <h3 style="color: #fff; margin-bottom: 0.5rem;">⚖️ Startup Tech Lawyer</h3>
+            <p style="color: #94A3B8; font-size: 0.85rem;">Protecting Innovation, Powering Growth.</p>
+        </div>
+        <div class="footer-bottom">
+            <p>⚠️ The content on this website is for general information purposes only and does not constitute legal advice.</p>
+            <p style="margin-top: 0.5rem;">&copy; 2026 Startup Tech Lawyer. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
