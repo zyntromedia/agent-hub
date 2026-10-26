@@ -1,6 +1,10 @@
-json
 {
+  "chat.editor.localAgent.enabled": true,
+  "chat.defaultToCopilotHarness": false,
+  "chat.editor.preferCopilotHarness": false
+}
   // กำหนดตำแหน่ง Python Interpreter ไปยัง Virtual Environment (.venv) ของโปรเจกต์
+{
   "python.defaultInterpreterPath": "$`{workspaceFolder}/.venv/bin/python",
 
   // ตั้งค่าการจัดฟอร์แมตโค้ดอัตโนมัติเมื่อบันทึกไฟล์ด้วย Black
